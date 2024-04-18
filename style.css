@@ -21,6 +21,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    cursor: pointer;
 }
 
 #bar1, #bar2, #bar3{
@@ -165,4 +166,48 @@ button:hover {
     position: absolute;
     top: 10%;
     z-index: 100;
+}
+
+#clickhere {
+    position: absolute;
+    color: aliceblue;
+    background: purple;
+    padding: 5px 50px 5px 10px;
+    font-size: 20px;
+    top: 5%;
+    right: clamp(10vw, 55px, 100px);
+    border-radius: 5px;
+    animation: clickhere 2s ease-in-out infinite;
+}
+
+#clickhere::after {
+    content: ">";
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 25px;
+}
+
+#clickhere::before {
+    content: "_";
+    position: absolute;
+    right: 14.5px;
+    top: 1%;
+    transform: translateY(-59%);
+    font-size: 40px;
+}
+
+@keyframes clickhere {
+    0% {
+        background-color: purple;
+    }
+
+    50% {
+        background-color: red;
+    }
+
+    100% {
+        background-color: purple;
+    }
 }
