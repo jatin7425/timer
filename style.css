@@ -119,7 +119,7 @@ button:hover {
     background-color: #45a049;
 }
 
-#resetBtn, #stopBtn, #restartBtn {
+#resetBtn, #pauseBtn, #restartBtn, #resumeBtn {
     padding: 5px 10px;
     font-size: 3.5vw;
 }
@@ -146,7 +146,7 @@ button:hover {
         font-size: 5vw;
     }
 
-    #resetBtn, #stopBtn, #restartBtn {
+    #resetBtn, #pauseBtn, #restartBtn, #resumeBtn {
         font-size: 1.2em;
     }
 }
