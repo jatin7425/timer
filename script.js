@@ -14,6 +14,8 @@ let countdownInterval;
 
 let message = document.getElementById('message');
 
+let clickhere = document.getElementById('clickhere');
+
 
 hrDisplay.textContent = '00 :';
 minDisplay.textContent = '00 :';
@@ -115,15 +117,26 @@ stopBtn.addEventListener('click', () => {
     }, 1000);
 });
 
+setInterval(() => {
+    clickhere.style.display = 'none';
+}, 3000);
+
 restartBtn.addEventListener('click', () => {
     if (isPaused) {
         startCountdown();
         isPaused = false;
     }
     message.textContent = 'Timer Started';
+    clickhere.style.display = 'inline-block';
+
     setInterval(() => {
         message.textContent = '';
     }, 1000);
+
+    setInterval(() => {
+        clickhere.style.display = 'none';
+    }, 3000);
+
 });
 
 
@@ -132,7 +145,7 @@ function formatTime(time) {
 }
 
 startBtn.addEventListener('click', () => {
-    startCountdown;
+    startCountdown();
     if (hoursInput.value == 0 && minutesInput.value == 0 && secondsInput.value == 0) {
         message.textContent = 'Please enter Values';
     }
