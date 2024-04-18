@@ -1,59 +1,38 @@
 let hrDisplay = document.getElementById('hr');
 let minDisplay = document.getElementById('min');
 let secDisplay = document.getElementById('sec');
-
 let hoursInput = document.getElementById('hours');
 let minutesInput = document.getElementById('minutes');
 let secondsInput = document.getElementById('seconds');
-
 let startBtn = document.getElementById('startBtn');
 let resetBtn = document.getElementById('resetBtn');
-let stopBtn = document.getElementById('stopBtn');
+let pauseBtn = document.getElementById('pauseBtn');
+let resumeBtn = document.getElementById('resumeBtn');
 let restartBtn = document.getElementById('restartBtn');
-let countdownInterval;
-
 let message = document.getElementById('message');
-
 let clickhere = document.getElementById('clickhere');
-
+let countdownInterval;
+let isPaused = false;
+let remainingHours = 0;
+let remainingMinutes = 0;
+let remainingSeconds = 0;
 
 hrDisplay.textContent = '00 :';
 minDisplay.textContent = '00 :';
 secDisplay.textContent = '00';
 
 function hambaropen() {
-    bar1.style.width = "75%";
-    bar1.style.top = "0";
-    bar1.style.left = "0";
-    bar1.style.transform = "rotate(0deg)";
-
-    bar2.style.top = "50%";
-    bar2.style.width = "100%";
-    bar2.style.transform = "rotate(0deg) translateY(-50%)";
-
-    bar3.style.width = "75%";
-    bar3.style.bottom = "0";
-    bar3.style.right = "0";
-    bar3.style.transform = "rotate(0deg)";
-
+    bar1.style.cssText = "width: 75%; top: 0; left: 0; transform: rotate(0deg);";
+    bar2.style.cssText = "top: 50%; width: 100%; transform: rotate(0deg) translateY(-50%);";
+    bar3.style.cssText = "width: 75%; bottom: 0; right: 0; transform: rotate(0deg);";
     container.style.transform = "translateY(-100%)";
     hambool = false;
 }
 
 function hambarclose() {
-    bar1.style.transform = "rotate(45deg)";
-    bar1.style.top = "17%";
-    bar1.style.left = "-13%";
-
-    bar2.style.transform = "rotate(-45deg)";
-    bar2.style.width = "156%";
-    bar2.style.left = "-27%";
-    bar2.style.top = "45%";
-
-    bar3.style.transform = "rotate(45deg)";
-    bar3.style.bottom = "17%";
-    bar3.style.right = "-16%";
-
+    bar1.style.cssText = "transform: rotate(45deg); top: 17%; left: -13%;";
+    bar2.style.cssText = "transform: rotate(-45deg); width: 156%; left: -27%; top: 45%;";
+    bar3.style.cssText = "transform: rotate(45deg); bottom: 17%; right: -16%;";
     container.style.transform = "translateY(0)";
     hambool = true;
 }
@@ -62,102 +41,88 @@ function startCountdown() {
     let hours = parseInt(hoursInput.value);
     let minutes = parseInt(minutesInput.value);
     let seconds = parseInt(secondsInput.value);
-
     if (isNaN(hours) || isNaN(minutes) || isNaN(seconds)) {
         alert('Please enter valid numbers for hours, minutes, and seconds.');
         return;
     }
+    remainingHours = hours;
+    remainingMinutes = minutes;
+    remainingSeconds = seconds;
+    countdownInterval = setInterval(updateCountdown, 1000);
+}
 
-    countdownInterval = setInterval(() => {
-        if (seconds === 0) {
-            if (minutes === 0) {
-                if (hours === 0) {
-                    clearInterval(countdownInterval);
-                    alert('Countdown completed!');
-                    return;
-                }
-                hours--;
-                minutes = 59;
-            } else {
-                minutes--;
+function updateCountdown() {
+    if (remainingSeconds === 0) {
+        if (remainingMinutes === 0) {
+            if (remainingHours === 0) {
+                clearInterval(countdownInterval);
+                return;
             }
-            seconds = 59;
+            remainingHours--;
+            remainingMinutes = 59;
         } else {
-            seconds--;
+            remainingMinutes--;
         }
-
-        hrDisplay.textContent = formatTime(hours) + ':';
-        minDisplay.textContent = formatTime(minutes) + ':';
-        secDisplay.textContent = formatTime(seconds);
-    }, 1000);
+        remainingSeconds = 59;
+    } else {
+        remainingSeconds--;
+    }
+    hrDisplay.textContent = formatTime(remainingHours) + ':';
+    minDisplay.textContent = formatTime(remainingMinutes) + ':';
+    secDisplay.textContent = formatTime(remainingSeconds);
 }
 
 function resetTimer() {
     clearInterval(countdownInterval);
-    hoursInput.value = '';
-    minutesInput.value = '';
-    secondsInput.value = '';
-    hrDisplay.textContent = '00 :';
-    minDisplay.textContent = '00 :';
-    secDisplay.textContent = '00';
+    [hrDisplay, minDisplay, secDisplay].forEach(display => display.textContent = '00 :');
     message.textContent = 'Timer reset';
-    setInterval(() => {
-        message.textContent = '';
-    }, 1000);
+    setTimeout(() => { message.textContent = ''; }, 1000);
+    remainingHours = remainingMinutes = remainingSeconds = 0;
 }
 
-let isPaused = false;
-
-stopBtn.addEventListener('click', () => {
-    clearInterval(countdownInterval);
-    isPaused = true;
-    message.textContent = 'Timer is paused';
-    setInterval(() => {
-        message.textContent = '';
-    }, 1000);
-});
-
-setInterval(() => {
-    clickhere.style.display = 'none';
-}, 3000);
-
-restartBtn.addEventListener('click', () => {
-    if (isPaused) {
-        startCountdown();
-        isPaused = false;
-    }
-    message.textContent = 'Timer Started';
-    clickhere.style.display = 'inline-block';
-
-    setInterval(() => {
-        message.textContent = '';
-    }, 1000);
-
-    setInterval(() => {
-        clickhere.style.display = 'none';
-    }, 3000);
-
-});
-
+function startCountdownWithRemainingTime() {
+    countdownInterval = setInterval(updateCountdown, 1000);
+}
 
 function formatTime(time) {
     return time < 10 ? '0' + time : time;
 }
 
+setInterval(() => { clickhere.style.display = 'none'; }, 3000);
+
+restartBtn.addEventListener('click', () => {
+    resetTimer();
+    startCountdown();
+    message.textContent = 'Timer Reset';
+    clickhere.style.display = 'inline-block';
+    setTimeout(() => { message.textContent = ''; }, 1000);
+    setInterval(() => { clickhere.style.display = 'none'; }, 3000);
+});
+
+pauseBtn.addEventListener('click', () => {
+    clearInterval(countdownInterval);
+    isPaused = true;
+    message.textContent = 'Timer is paused';
+    setTimeout(() => { message.textContent = ''; }, 1000);
+});
+
+resumeBtn.addEventListener('click', () => {
+    if (!isPaused) return;
+    startCountdownWithRemainingTime();
+});
+
 startBtn.addEventListener('click', () => {
     startCountdown();
-    if (hoursInput.value == 0 && minutesInput.value == 0 && secondsInput.value == 0) {
-        message.textContent = 'Please enter Values';
-    }
-    setTimeout(() => {
-        message.textContent = '';
-    }, 1000);
+    if (!(hoursInput.value || minutesInput.value || secondsInput.value)) message.textContent = 'Please enter Values';
+    setTimeout(() => { message.textContent = ''; }, 1000);
     container.style.transform = "translateY(-100%)";
-
     hambaropen();
 });
 
-resetBtn.addEventListener('click', resetTimer);
+resetBtn.addEventListener('click', () => {
+    [hoursInput, minutesInput, secondsInput].forEach(input => input.value = '');
+    resetTimer();
+});
 
 let container = document.getElementById('container');
 let ham = document.getElementById('ham');
@@ -166,10 +131,4 @@ let bar2 = document.getElementById('bar2');
 let bar3 = document.getElementById('bar3');
 let hambool = false;
 
-ham.addEventListener("click", () => {
-    if (hambool == false) {
-        hambarclose();
-    } else {
-        hambaropen();
-    }
-});
+ham.addEventListener("click", () => { hambool ? hambaropen() : hambarclose(); });
