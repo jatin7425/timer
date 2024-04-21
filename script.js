@@ -80,7 +80,9 @@ function updateCountdown() {
 
 function resetTimer() {
     clearInterval(countdownInterval);
-    [hrDisplay, minDisplay, secDisplay].forEach(display => display.textContent = '00 :');
+    hrDisplay.textContent = '00 :';
+    minDisplay.textContent = '00 :';
+    secDisplay.textContent = '00 ';
     message.textContent = 'Timer reset';
     setTimeout(() => { message.textContent = ''; }, 1000);
     remainingHours = remainingMinutes = remainingSeconds = 0;
