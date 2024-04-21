@@ -11,11 +11,14 @@ let resumeBtn = document.getElementById('resumeBtn');
 let restartBtn = document.getElementById('restartBtn');
 let message = document.getElementById('message');
 let clickhere = document.getElementById('clickhere');
+let stopmusic = document.getElementById('stopmusic');
+let stopmusicbtn = document.getElementById('stopmusicbtn');
 let countdownInterval;
 let isPaused = false;
 let remainingHours = 0;
 let remainingMinutes = 0;
 let remainingSeconds = 0;
+let music1 = new Audio('digital-alarm-clock-151920.mp3');
 
 hrDisplay.textContent = '00 :';
 minDisplay.textContent = '00 :';
@@ -41,14 +44,14 @@ function startCountdown() {
     let hours = parseInt(hoursInput.value);
     let minutes = parseInt(minutesInput.value);
     let seconds = parseInt(secondsInput.value);
-    if (isNaN(hours) || isNaN(minutes) || isNaN(seconds)) {
-        alert('Please enter valid numbers for hours, minutes, and seconds.');
-        return;
-    }
     remainingHours = hours;
     remainingMinutes = minutes;
     remainingSeconds = seconds;
     countdownInterval = setInterval(updateCountdown, 1000);
+}
+
+function ShowEnd(params) {
+    stopmusic.style.display = params
 }
 
 function updateCountdown() {
@@ -56,6 +59,8 @@ function updateCountdown() {
         if (remainingMinutes === 0) {
             if (remainingHours === 0) {
                 clearInterval(countdownInterval);
+                ShowEnd('flex');
+                music1.play();
                 return;
             }
             remainingHours--;
@@ -87,6 +92,11 @@ function startCountdownWithRemainingTime() {
 function formatTime(time) {
     return time < 10 ? '0' + time : time;
 }
+
+stopmusicbtn.addEventListener('click', () =>{
+    ShowEnd('none');
+    music1.pause();
+});
 
 setInterval(() => { clickhere.style.display = 'none'; }, 3000);
 
