@@ -220,7 +220,7 @@ button:hover {
     background: rgba(0, 0, 0, 0.494);
     border: 2px solid white;
     backdrop-filter: blur(10px);
-    border-radius: 10%;
+    border-radius: 100%;
     flex-direction: column;
     justify-content: center;
     align-items: center;
