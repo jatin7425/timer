@@ -19,6 +19,7 @@ let remainingHours = 0;
 let remainingMinutes = 0;
 let remainingSeconds = 0;
 let music1 = new Audio('digital-alarm-clock-151920.mp3');
+music1.loop = true;
 
 hrDisplay.textContent = '00 :';
 minDisplay.textContent = '00 :';
